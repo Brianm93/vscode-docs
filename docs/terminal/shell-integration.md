@@ -4,7 +4,7 @@ Area: terminal
 TOCTitle: Shell Integration
 ContentId: a6a1652b-c0d8-4054-a2da-feb915eef2cc
 PageTitle: Terminal Shell Integration in Visual Studio Code
-DateApproved: 11/1/2023
+DateApproved: 02/1/2024
 MetaDescription: Visual Studio Code's embedded terminal can integrate with some shells to enhance the capabilities of the terminal.
 ---
 
@@ -43,8 +43,6 @@ Add the following to your `~/.bashrc` file. Run `code ~/.bashrc` in bash to open
 
 **fish**
 
-⚠️ This is currently experimental and automatic injection is not supported
-
 Add the following to your `config.fish`. Run `code $__fish_config_dir/config.fish` in fish to open the file in VS Code.
 
 ```sh
@@ -80,7 +78,7 @@ Add the following to your `~/.bashrc` file. Run `code ~/.bashrc` in Git Bash to 
 
 #### Portability versus performance
 
-The recommended approach above to install shell integration relies on executing our CLI to find the path to the shell integration script. This is great as it works cross-platform and also with all install types, provided `code` in on the `$PATH`. This currently launches Node.js in order to fetch the path, which can add a small delay to shell startup. To reduce this, you can inline the script above by resolving the path ahead of time and adding it directly into your init script.
+The above shell integration installation is cross-platform and compatible with any installation type if `code` is in the `$PATH`. However, this recommended approach starts Node.js to fetch the script path, leading to a slight delay in shell startup. To mitigate this delay, inline the script above by resolving the path ahead of time and adding it directly into your init script.
 
 ```sh
 # Output the executable's path first:
@@ -100,11 +98,19 @@ The decorations can be interacted with to give some contextual actions like re-r
 
 ![Clicking a successful command decoration shows a context menu containing items: Copy Output, Copy Output as HTML, Rerun Command and How does this work?](images/shell-integration/decoration-menu.png)
 
-The command and overview ruler decorations can be configured with the setting `terminal.integrated.shellIntegration.decorationsEnabled` setting.
+The command and overview ruler decorations can be configured with the `terminal.integrated.shellIntegration.decorationsEnabled` setting.
 
 ## Command navigation
 
-The commands detected by shell integration feed into the command navigation feature (`kbStyle(Ctrl/Cmd+Up)`, `kbStyle(Ctrl/Cmd+Down)`) to give it more reliable command positions. This feature allows for quick navigation between commands and selection of their output. Hold `kbStyle(Shift)` as well to select from the current position to the command.
+The commands detected by shell integration feed into the command navigation feature (`kbStyle(Ctrl/Cmd+Up)`, `kbStyle(Ctrl/Cmd+Down)`) to give it more reliable command positions. This feature allows for quick navigation between commands and selection of their output. To select from the current position to the command, you can also hold down `kbStyle(Shift)`, pressing `kbStyle(Shift+Ctrl/Cmd+Up)` and `kbStyle(Shift+Ctrl/Cmd+Down)`.
+
+## Sticky scroll
+
+The sticky scroll feature will "stick" the command that is partially showing at the top of the terminal, making it much easier to see what command that output belongs to. Clicking on the sticky scroll component will scroll to the command's location in the terminal buffer.
+
+![Sticky scroll will show the command at the top of the terminal viewport](images/shell-integration/sticky-scroll.png)
+
+This can be enabled with the `terminal.integrated.stickyScroll.enabled` setting.
 
 ## Quick fixes
 
@@ -182,7 +188,11 @@ The following keybindings should work in PowerShell when shell integration is en
 
 ## Enhanced accessibility
 
-The information that shell integration provides to VS Code is used to improve [accessibility in the terminal](/docs/editor/accessibility.md#terminal-accessibility). For example, you can navigate through detected commands in the accessible buffer (`kb(workbench.action.terminal.focusAccessibleBuffer)`) and an [audio cue](/docs/editor/accessibility.md#audio-cues) plays when a command fails.
+The information that shell integration provides to VS Code is used to improve [accessibility in the terminal](/docs/editor/accessibility.md#terminal-accessibility). Some examples of enhancements are:
+
+- Navigation through detected commands in the accessible buffer (`kb(workbench.action.terminal.focusAccessibleBuffer)`)
+- An [audio cue](/docs/editor/accessibility.md#audio-cues) plays when a command fails.
+- Underlying text box synchronizing such that using the arrow and backspace keys behave more correctly.
 
 ## Supported escape sequences
 
